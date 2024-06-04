@@ -1,9 +1,9 @@
 import React from 'react';
-import './Home.css';
+import './Landing.css';
 import Hero from '../../components/hero/Hero'
 import backgroundImage from '../../assets/HeroImage.png';
 
-const Home = () => {
+const Landing = () => {
   const heroContent = {
     backgroundImage: backgroundImage,
   };
@@ -15,4 +15,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Landing;
