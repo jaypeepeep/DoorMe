@@ -7,7 +7,7 @@ const Hero = ({backgroundImage}) => {
   };
 
   return (
-    <div className='hero container' style={heroStyle}>
+    <div className='hero mcontainer' style={heroStyle}>
         
     </div>
   );
