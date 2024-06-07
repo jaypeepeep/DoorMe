@@ -10,8 +10,8 @@
 
 .login-content {
   text-align: center;
-  width: 50%;
-  aspect-ratio: 1.5;
+  width: auto;
+  aspect-ratio: 1;
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(5px);
@@ -44,8 +44,10 @@
 
 .login-input {
   display: block;
-  width: 80%;
-  margin: 10px auto;
+  width: 400px;
+  margin: 10px;
+  margin-left: 50px;
+  margin-right: 50px;
   padding: 10px;
   border-radius: 16px;
   border: 1px solid rgba(0, 0, 0, 0.2);
