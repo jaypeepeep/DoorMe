@@ -32,7 +32,6 @@ class Header extends Component {
                                     : 'text-gray-800 hover:text-[#651FFF] transition duration-300 ease-in-out'
                             }
                         >
-                            Home
                         </NavLink>
                     </li>
                     <li className="inline-block mx-5 text-base font-bold font-sans cursor-pointer">
