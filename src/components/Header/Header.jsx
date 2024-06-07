@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import Logo from '../logo/Logo';
+import ClearButtonSmall from '../buttons/ClearButtonSmall';
+import DarkButtonSmall from '../buttons/DarkButtonSmall';
+import './Header.css'
 
 class Header extends Component {
     state = { clicked: false };
@@ -29,6 +32,7 @@ class Header extends Component {
                                     : 'text-gray-800 hover:text-[#651FFF] transition duration-300 ease-in-out'
                             }
                         >
+                            Home
                         </NavLink>
                     </li>
                     <li className="inline-block mx-5 text-base font-bold font-sans cursor-pointer">
@@ -80,6 +84,8 @@ class Header extends Component {
                         </NavLink>
                     </li>
                 </ul>
+                <ClearButtonSmall >Login</ClearButtonSmall>
+                <DarkButtonSmall >Register</DarkButtonSmall>
             </nav>
         );
     }
