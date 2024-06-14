@@ -1,10 +1,22 @@
 import React from 'react'
 import StrongBorderButton from '../../components/buttons/StrongBorderButton.jsx'
-import PropertiesCards from '../../components/cards/PropertiesCards.jsx';
+import FeaturedCards from '../../components/cards/FeaturedCards.jsx';
+import f1 from '../../assets/f1.png'
+import f2 from '../../assets/f2.png'
+import f3 from '../../assets/f3.png'
+import f4 from '../../assets/f4.png'
+import f5 from '../../assets/f5.png'
+import f6 from '../../assets/f6.png'
+
 
 const Featured = () => {
     const properties = [
-        {image: 'https://via.placeholder.com/300x200.png?text=Condo', address: 'Condo', price: '₹4,000', paymentType:"monthly"},
+        {propertyImage:f1,propertyName:"Cozy, Affordable Bedspaces", address:"sample address", price:4000, period:"monthly"},
+        {propertyImage:f2,propertyName:"Cozy, Affordable Bedspaces", address:"sample address", price:3000, period:"monthly"},
+        {propertyImage:f3,propertyName:"Cozy, Affordable Bedspaces", address:"sample address", price:4000, period:"monthly"},
+        {propertyImage:f4,propertyName:"Cozy, Affordable Bedspaces", address:"sample address", price:7500, period:"monthly"},
+        {propertyImage:f5,propertyName:"Cozy, Affordable Bedspaces", address:"sample address", price:2000, period:"monthly"},
+        {propertyImage:f6,propertyName:"Cozy, Affordable Bedspaces", address:"sample address", price:6000, period:"monthly"},
     ];
     return (
         <div className="bg-white py-8">
@@ -24,8 +36,20 @@ const Featured = () => {
                 <StrongBorderButton>Apartments</StrongBorderButton>
                 <StrongBorderButton>Studio</StrongBorderButton>
             </div>
-            <div className="text-center mt-8">
-                <button className="bg-white text-[#1A1A1A] font-bold px-6 py-3 rounded-md hover:bg-purple-700 transition-colors">
+            <div className="text-center pt-10 pb-8 gap-10 justify-center items-center flex flex-row flex-wrap mt-8">
+                {properties.map((propert, index) => (
+                    <FeaturedCards
+                        key={index}
+                        propertyImage={propert.propertyImage}
+                        propertyName={propert.propertyName}
+                        address={propert.address}
+                        price={propert.price}
+                        period={propert.period}
+                    />
+                ))}
+            </div>
+            <div className="w-full pt-10 pb-10 flex flex-col gap-7 justify-center items-center ">
+                <button className="bg-white text-[#1A1A1A] font-bold px-6 py-3 rounded-md hover:bg-purple-700 hover:text-white transition-colors">
                     See All Listings
                 </button>
             </div>
