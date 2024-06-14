@@ -5,7 +5,6 @@ import Footer from "./components/footer/Footer";
 import Landing from "./pages/landing/Landing";
 import About from "./pages/about/About";
 import Login from "./pages/login/Login";
-import Register from "./pages/register/Register";
 import "./App.css";
 
 const App = () => {
@@ -16,7 +15,6 @@ const App = () => {
         <Route path="/" element={<Landing />} />
         <Route path="/About" element={<About />} />
         <Route path="/Login" element={<Login />} />
-        <Route path="/Register" element={<Register />} />
       </Routes>
       <Footer/>
     </Router>

@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap");
+
 .login-container {
   background-image: url("../../assets/loginBackground.png");
   background-size: cover;
@@ -56,17 +58,24 @@
 }
 
 .login-button {
-  width: 25%;
-  height: 55px;
-  flex-shrink: 0;
+  width: 32%;
+  height: auto;
   border-radius: 50px;
   background: linear-gradient(0deg, #651fff 0%, #651fff 100%);
   box-shadow: 0px 8px 21px 0px rgba(0, 0, 0, 0.16);
   color: rgba(255, 255, 255, 0.9);
-  text-align: center;
-  font-family: Montserrat;
+  font-family: "Montserrat", sans-serif;
   font-size: 18px;
-  font-weight: 700;
-  margin-top: 50px;
+  font-weight: 550;
+  margin-top: 20px;
   margin-bottom: 20px;
+  padding: 20px;
+  cursor: pointer;
+  justify-content: center;
+}
+
+.create-account-link {
+  color: #651fff;
+  text-decoration: underline;
+  font-weight: 700;
 }
