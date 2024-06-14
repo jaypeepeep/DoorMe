@@ -23,7 +23,7 @@ const FeaturedCards = ({propertyImage, propertyName, address, price, period}) =>
                     <p className="font-regular leading-4">{address}</p>
                 </div>
             </div>
-            <div className="bg-[#651FFF] px-2 w-[100px] rounded-xl m-auto " >
+            <div className="bg-[#651FFF] px-2 w-[120px] rounded-xl m-auto " >
                 <h5 className="font-montserrat text-[11px] leading-8  font-bold">
                   &#8369;{price}<span className="font-normal"> / {period}</span>
                 </h5>
