@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./Success.css";
 
 function Success() {
-  const [seconds, setSeconds] = useState(10);
+  const [seconds, setSeconds] = useState(15);  // Set the starting value here
   const navigate = useNavigate();
 
   useEffect(() => {
