@@ -102,7 +102,7 @@ class Header extends Component {
             className={({ isActive }) =>
               isActive
                 ? "text-[#651FFF]"
-                : "text-gray-800 hover:text-white transition duration-300 ease-in-out"
+                : "text-gray-800 hover:text-[#651FFF] transition duration-300 ease-in-out"
             }
           >
             Register

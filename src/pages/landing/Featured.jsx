@@ -19,7 +19,7 @@ const Featured = () => {
         {propertyImage:f6,propertyName:"Cozy, Affordable Bedspaces", address:"sample address", price:6000, period:"monthly"},
     ];
     return (
-        <div className="bg-white py-8">
+        <div className="bg-white py-8 px-[10%]">
             <div className="w-full pt-20 pb-10 flex flex-col gap-7 justify-center items-center ">
                 <div className='flex flex-col gap-1 justify-center items-center'>
                     <h1 className="font-montserrat text-center text-4xl font-semibold">
