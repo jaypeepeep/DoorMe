@@ -1,0 +1,120 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap");
+
+.register-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    height: 100vh;
+    margin-left: 120px;
+}
+
+.register-content {
+    width: 45%;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    margin-top: 100px;
+    overflow-y: auto;
+}
+
+.register-bg {
+    width: 50%;
+    height: 100vh;
+    background-image: url('../../assets/register_bg_img.png');
+    background-size: cover;
+    background-position: center;
+}
+
+.register-content .header-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.register-content h1 {
+    color: #42505C;
+    font-size: 33px;
+    margin-right: 20px;
+    font-family: Montserrat;
+    font-weight: bold;
+}
+
+.register-content .header-p {
+    font-size: 9px;
+    margin-left: 120px;
+}
+
+.register-content .form-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.register-content .form-row label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.register-content .form-row .input-container {
+  width: 48%; 
+}
+
+.register-content label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.register-content input[type="text"],
+.register-content input[type="email"],
+.register-content input[type="tel"],
+.register-content input[type="password"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+.register-content .price-range-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.register-content .price-range-container div {
+  flex-basis: 24%;
+  padding: 5px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  margin-bottom: 0;
+  text-align: center;
+}
+
+.register-content .price-range-container div p {
+  margin: 0;
+}
+
+.register-content .price-range-container div:hover {
+  background-color: #f0f0f0;
+}
+
+.register-content .button-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.register-content .register-button {
+    width: 25%;
+    height: 55px;
+    flex-shrink: 0;
+    border-radius: 50px;
+    background: linear-gradient(0deg, #651fff 0%, #651fff 100%);
+    box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.16);
+    color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.register-content .register-button:hover {
+  background-color: #2C1169;
+}
