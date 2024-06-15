@@ -3,8 +3,8 @@ import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
 import Landing from "./pages/landing/Landing";
 import About from "./pages/about/About";
-import Login from "./pages/login/Login";
-import Register from "./pages/register/Register";
+import Login from "./pages/login/Login"; // Correct file import
+import Register from "./pages/register/Register"; // Correct file import
 import How from "./pages/howitworks/How"
 import Profile from './pages/profile/Profile';
 import Success from './pages/success/Success';

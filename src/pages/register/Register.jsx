@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import "./Register.css";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
@@ -10,8 +11,8 @@ const Register = () => {
     email: '',
     university: '',
     socialStatus: '',
-    rentPrice: '',
     phoneNumber: '',
+    username: '',
     password: '',
     confirmPassword: ''
   });
@@ -33,18 +34,7 @@ const Register = () => {
     }));
   };
 
-  const handleRentPriceClick = (price) => {
-    setForm(prevForm => ({
-      ...prevForm,
-      rentPrice: price
-    }));
-    setTouched(prevTouched => ({
-      ...prevTouched,
-      rentPrice: true
-    }));
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const allFieldsFilled = Object.keys(form).every(key => form[key]);
@@ -56,7 +46,14 @@ const Register = () => {
     } else {
       setShowTooltip(false);
       setPasswordMismatch(false);
-      navigate('/success');
+      try {
+        const response = await axios.post('http://localhost:5000/register', form);
+        if (response.data.message === 'User registered successfully') {
+          navigate('/success');
+        }
+      } catch (error) {
+        console.error('There was an error registering!', error);
+      }
     }
   };
 
@@ -134,20 +131,6 @@ const Register = () => {
 
           <div className="form-row">
             <div className="input-container">
-              <label>Prefer Rent Prices {renderTooltip('rentPrice')}</label>
-              <div className="price-range-container">
-                {['<1000', '<2000', '<3000', '<4000'].map(price => (
-                  <div
-                    key={price}
-                    className={`price-option ${form.rentPrice === price ? 'selected' : ''}`}
-                    onClick={() => handleRentPriceClick(price)}
-                  >
-                    <p>{price}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="input-container">
               <label>Phone Number {renderTooltip('phoneNumber')}</label>
               <input
                 type="tel"
@@ -156,6 +139,18 @@ const Register = () => {
                 className="phone-number-input"
                 pattern="\+63 [0-9]{3} [0-9]{3} [0-9]{4}"
                 value={form.phoneNumber}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="input-container">
+              <label>Username {renderTooltip('username')}</label>
+              <input
+                type="text"
+                name="username"
+                placeholder="Username"
+                className="username-input"
+                value={form.username}
                 onChange={handleChange}
                 required
               />
@@ -198,6 +193,6 @@ const Register = () => {
       <div className="register-bg"></div>
     </div>
   );
-}
+};
 
 export default Register;
