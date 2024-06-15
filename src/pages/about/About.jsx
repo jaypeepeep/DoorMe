@@ -6,6 +6,9 @@ import aboutsection3icon from "../../assets/about-section3-icon.png";
 import aboutsection3column2 from "../../assets/about-section3-column2.png";
 import aboutsection3column3 from "../../assets/about-section3-column3.png";
 import aboutsection3column4 from "../../assets/about-section3-column4.png";
+import aboutsection4icon from "../../assets/about-section4-icon.png";
+import aboutsection4img from "../../assets/about-section4.jpg";
+import aboutsection4faqitem from "../../assets/about-section4-faq-item.png";
 
 function About() {
   return (
@@ -84,7 +87,54 @@ function About() {
         </div>
       </div>
       <div className="about-section4-container">
-        <div className="about-section4-content"></div>
+        <div className="about-section4-content">
+          <div className="about-section4-first-column">
+            <img
+              src={aboutsection4img}
+              alt="People studying and working on computers in a dorm room."
+            />
+          </div>
+          <div className="about-section4-second-column">
+            <div className="about-section4-title">
+              <img
+                src={aboutsection4icon}
+                alt="A frequently asked questions icon."
+              />
+              <h2>DoorMe Features</h2>
+            </div>
+            <h1>Frequently asked questions</h1>
+            <div className="faq-container">
+              <div className="faq-item">
+                <div className="short-vertical-line"></div>
+                <p>How do I search for dorms on DoorMe?</p>
+                <button className="faq-item-plus">
+                  <img src={aboutsection4faqitem} alt="Plus icon." />
+                </button>
+              </div>
+              <div className="faq-item">
+                <div className="short-vertical-line"></div>
+                <p>How do I book a dorm through DoorMe?</p>
+                <button className="faq-item-plus">
+                  <img src={aboutsection4faqitem} alt="Plus icon." />
+                </button>
+              </div>
+              <div className="faq-item">
+                <div className="short-vertical-line"></div>
+                <p>Is my payment information secure with DoorMe?</p>
+                <button className="faq-item-plus">
+                  <img src={aboutsection4faqitem} alt="Plus icon." />
+                </button>
+              </div>
+              <div className="faq-item">
+                <div className="short-vertical-line"></div>
+                <p>Can I cancel or modify my visiting schedule?</p>
+                <button className="faq-item-plus">
+                  <img src={aboutsection4faqitem} alt="Plus icon." />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
