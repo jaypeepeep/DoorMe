@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import "./Register.css";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
-import Shadow from "../../assets/shadow-above.png";
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -74,7 +73,6 @@ const Register = () => {
   return (
     <div className="register-container">
       <div className="register-content">
-        <div className="shadow-above"></div>
         <div className="header-container">
           <h1>Input your information</h1>
           <p className="header-p">We need you to help us with some basic information for your account creation. Here are our <span style={{color: "#4743E0"}}>terms and conditions</span>. Please read them carefully. We are GDPR compliant</p>
