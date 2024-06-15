@@ -3,12 +3,12 @@
 WEB DEVELOPMENT
 BSCS 3-3
 
-###MEMBERS
->Abelligos, Adrian Rafael
->Alpapara Nichole
->Lagatuz, John Patrick
->Peroche, John Mark
->Torreda, Kurt Denver
+### MEMBERS
+- Abelligos, Adrian Rafael
+- Alpapara Nichole
+- Lagatuz, John Patrick
+- Peroche, John Mark
+- Torreda, Kurt Denver
 
 ## Installation
 
