@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
+const path = require('path');
 
 const app = express();
 const port = 5000;
@@ -10,12 +11,13 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Connect to SQLite database
-const db = new sqlite3.Database(':memory:'); // ':memory:' for an in-memory database, or a file path for a persistent database
+const dbPath = path.resolve(__dirname, 'database.sqlite');
+const db = new sqlite3.Database(dbPath);
 
-// Create users table and insert initial account
+// Create users table if it doesn't exist
 db.serialize(() => {
   db.run(`
-    CREATE TABLE users (
+    CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       fullName TEXT,
       email TEXT,
@@ -31,7 +33,14 @@ db.serialize(() => {
     INSERT INTO users (fullName, email, university, socialStatus, phoneNumber, username, password)
     VALUES ('John Doe', 'john@example.com', 'Example University', 'Student', '+63 999 999 9999', 'john_doe', 'password123')
   `;
-  db.run(initialUser);
+  db.run(initialUser, function(err) {
+    if (err && err.message.includes('SQLITE_CONSTRAINT')) {
+      // The initial user already exists, no need to insert again
+      return;
+    } else if (err) {
+      console.error('Error inserting initial user:', err.message);
+    }
+  });
 });
 
 // Register user endpoint
