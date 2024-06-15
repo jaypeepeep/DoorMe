@@ -36,7 +36,7 @@ function Login() {
     if (username && password) {
       console.log("Username:", username);
       console.log("Password:", password);
-      navigate("/success");
+      navigate("/profile");
     }
   };
 

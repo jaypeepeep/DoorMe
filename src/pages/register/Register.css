@@ -2,24 +2,25 @@
 
 .register-container {
     display: flex;
+    background-color: rgba(255, 255, 255, 0.8);
     justify-content: space-between;
     align-items: flex-start;
     height: 100vh;
-    margin-left: 120px;
 }
 
 .register-content {
     width: 45%;
     padding: 20px;
+    padding-left: 5%;
     background-color: rgba(255, 255, 255, 0.8);
-    margin-top: 100px;
+    margin-top: 50px;
     overflow-y: auto;
 }
 
 .register-bg {
     width: 50%;
     height: 100vh;
-    background-image: url('../../assets/register_bg_img.png');
+    background-image: url('../../assets/backgroundRegister.png');
     background-size: cover;
     background-position: center;
 }
@@ -50,12 +51,56 @@
 }
 
 .register-content .form-row label {
-  display: block;
+  display: flex;
+  align-items: center;
   margin-bottom: 5px;
 }
 
+.required-tooltip {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-color: #D1D1D1;
+  color: #fff;
+  text-align: center;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-left: 10px;
+  font-size: 14px;
+  line-height: 20px;
+  position: relative;
+}
+
+.required-tooltip::after {
+  content: "This field is required.";
+  visibility: hidden;
+  width: 200px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -100px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.required-tooltip:hover::after {
+  visibility: visible;
+  opacity: 1;
+}
+
+.required-tooltip.active::after {
+  visibility: visible;
+  opacity: 1;
+}
+
 .register-content .form-row .input-container {
-  width: 48%; 
+  width: 48%;
 }
 
 .register-content label {
@@ -70,6 +115,7 @@
   width: 100%;
   padding: 8px;
   border: 1px solid #ccc;
+  border-radius: 10px;
   margin-bottom: 10px;
 }
 
@@ -79,20 +125,24 @@
   margin-bottom: 20px;
 }
 
-.register-content .price-range-container div {
+.register-content .price-option {
   flex-basis: 24%;
   padding: 5px;
   cursor: pointer;
   border: 1px solid #ccc;
-  margin-bottom: 0;
   text-align: center;
 }
 
-.register-content .price-range-container div p {
+.register-content .price-option.selected {
+  background-color: #4743E0;
+  color: #fff;
+}
+
+.register-content .price-option p {
   margin: 0;
 }
 
-.register-content .price-range-container div:hover {
+.register-content .price-option:hover {
   background-color: #f0f0f0;
 }
 
