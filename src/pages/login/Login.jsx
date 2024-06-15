@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./Login.css";
 
 function Login() {
@@ -7,6 +8,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [loginError, setLoginError] = useState("");
   const navigate = useNavigate();
 
   const handleUsernameChange = (e) => {
@@ -17,8 +19,7 @@ function Login() {
     setPassword(e.target.value);
   };
 
-  // Function to handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (username.trim() === "") {
@@ -34,9 +35,18 @@ function Login() {
     }
 
     if (username && password) {
-      console.log("Username:", username);
-      console.log("Password:", password);
-      navigate("/profile");
+      try {
+        const response = await axios.post('http://localhost:5000/login', { username, password });
+        if (response.data.message === "Login successful") {
+          navigate("/profile");
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 400) {
+          setLoginError("Invalid username or password");
+        } else {
+          console.error('There was an error logging in!', error);
+        }
+      }
     }
   };
 
@@ -62,6 +72,7 @@ function Login() {
             onChange={handlePasswordChange}
           />
           {passwordError && <p className="error-message">{passwordError}</p>}
+          {loginError && <p className="error-message">{loginError}</p>}
           <button type="submit" className="login-button">
             Login Now
           </button>
