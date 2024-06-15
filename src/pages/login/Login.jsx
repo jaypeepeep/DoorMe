@@ -1,13 +1,13 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Login.css";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const navigate = useNavigate();
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
@@ -27,7 +27,6 @@ function Login() {
       setUsernameError("");
     }
 
-    // Validate password
     if (password.trim() === "") {
       setPasswordError("Password is required");
     } else {
@@ -37,6 +36,7 @@ function Login() {
     if (username && password) {
       console.log("Username:", username);
       console.log("Password:", password);
+      navigate("/success");
     }
   };
 
