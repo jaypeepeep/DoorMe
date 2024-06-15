@@ -6,6 +6,8 @@ import About from "./pages/about/About";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 import How from "./pages/howitworks/How"
+import Profile from './pages/profile/Profile';
+import Success from './pages/success/Success';
 import TransitionWrapper from "./components/transition/TransitionWrapper";
 import "./App.css";
 
@@ -20,6 +22,8 @@ const App = () => {
           <Route path="/Login" element={<Login />} />
           <Route path="/HowItWorks" element={<How />} />
           <Route path="/Register" element={<Register />} />
+          <Route path="/Profile" element={<Profile />} />
+          <Route path="/Success" element={<Success />} />
         </Routes>
       </TransitionWrapper>
       <Footer />
