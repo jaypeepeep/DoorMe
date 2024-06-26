@@ -71,6 +71,8 @@ To set up the DoorMe Website locally, follow these steps:
     npm install react-router-dom
     npm install -D tailwindcss
     npm install react-transition-group
+    npm install express sqlite3 body-parser cors
+    npm install axios
 
 ## Usage
 
