@@ -65,13 +65,22 @@ To set up the DoorMe Website locally, follow these steps:
 2. **Install dependencies:**
 - First, ensure you have Node.js and npm installed. Then, install React and other necessary packages:
     ```sh
-    npx create-react-app doorme
-    cd doorme
-    npm install react-transition-group
-    npm install react-router-dom
-    npm install -D tailwindcss
-    npm install react-transition-group
-
+   npm install react-transition-group
+   npm install react-transition-group
+   npm install react-router-dom
+   npm install -D tailwindcss
+   npm install express sqlite3 body-parser cors
+   npm install axios
+   npm install clsx
+   npm install tailwind-merge
+   npm install class-variance-authority
+   npm install autoprefixer
+   npm i --save @fortawesome/fontawesome-svg-core
+   npm install --save @fortawesome/free-solid-svg-icons
+   npm install --save @fortawesome/react-fontawesome
+   npm install @mui/material @emotion/react @emotion/styled
+   npm install mapbox-gl @mapbox/mapbox-gl-geocoder open-location-code
+    
 ## Usage
 
 To start the development server, run:

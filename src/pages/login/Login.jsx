@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Login.css";
 
-function Login() {
+function Login({ setIsLoggedIn }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [loginError, setLoginError] = useState("");
+  const [loginError, setLoginError] = useState('');
   const navigate = useNavigate();
 
   const handleUsernameChange = (e) => {
@@ -38,7 +38,9 @@ function Login() {
       try {
         const response = await axios.post('http://localhost:5000/login', { username, password });
         if (response.data.message === "Login successful") {
-          navigate("/profile");
+          localStorage.setItem('user', JSON.stringify(response.data.user));
+          navigate("/Home");
+          window.location.reload();
         }
       } catch (error) {
         if (error.response && error.response.status === 400) {

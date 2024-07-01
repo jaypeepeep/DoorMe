@@ -3,7 +3,7 @@ import React from 'react';
 const UnivCards = ({ univName, location, backgroundImage }) => {
   return (
     <div
-      className="relative w-[221px] h-[274px] rounded-[16px] overflow-hidden"
+      className="relative align-middle w-[221px] h-[274px] rounded-[16px] overflow-hidden"
       style={{
         backgroundImage: `linear-gradient(to bottom, rgba(101, 31, 255, 1), rgba(26, 26, 26, 0.1), rgba(0, 0, 0, 0)), url(${backgroundImage})`,
         backgroundSize: 'cover',
