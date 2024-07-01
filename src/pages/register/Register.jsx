@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import "./Register.css";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
+
+import backgroundImage from '../../assets/backgroundRegister.png';
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -60,41 +61,48 @@ const Register = () => {
   const renderTooltip = (field) => {
     return (
       showTooltip && !form[field] && touched[field] ? (
-        <span className="required-tooltip active">?</span>
+        <span className="required-tooltip active">
+          <FontAwesomeIcon icon={faQuestionCircle} className="text-gray-500 text-sm cursor-pointer" />
+          <span className="tooltip-text"></span>
+        </span>
       ) : (
-        <span className="required-tooltip">?</span>
+        <span className="required-tooltip">
+          <FontAwesomeIcon icon={faQuestionCircle} className="text-gray-500 text-sm cursor-pointer" />
+          <span className="tooltip-text"></span>
+        </span>
       )
     );
   };
 
   return (
-    <div className="register-container">
-      <div className="register-content">
-        <div className="header-container">
-          <h1>Input your information</h1>
-          <p className="header-p">We need you to help us with some basic information for your account creation. Here are our <span style={{color: "#4743E0"}}>terms and conditions</span>. Please read them carefully. We are GDPR compliant</p>
-        </div>
-        <form onSubmit={handleSubmit}>
-          <div className="form-row">
-            <div className="input-container">
-              <label>Full Name {renderTooltip('fullName')}</label>
+    <div className="flex flex-col md:flex-row">
+      <div className="md:w-1/2 bg-white p-10">
+        <h1 className="text-3xl font-bold text-gray-800">Input your information</h1>
+        <p className="text-sm text-gray-600 mt-2">We need you to help us with some basic information for your account creation. Here are our <span className="text-blue-600">terms and conditions</span>. Please read them carefully. We are GDPR compliant.</p>
+
+        <form onSubmit={handleSubmit} className="mt-6">
+          <div className="flex flex-col md:flex-row mb-4">
+            <div className="w-full md:w-1/2 pr-0 md:pr-3 mb-4 md:mb-0">
+              <label className="block mb-1">
+                <span>Full Name {renderTooltip('fullName')}</span>
+              </label>
               <input
                 type="text"
                 name="fullName"
                 placeholder="Full Name"
-                className="full-name-input"
+                className="w-full px-3 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
                 value={form.fullName}
                 onChange={handleChange}
                 required
               />
             </div>
-            <div className="input-container">
-              <label>Email {renderTooltip('email')}</label>
+            <div className="w-full md:w-1/2 pl-0 md:pl-3">
+              <label className="block mb-1">Email {renderTooltip('email')}</label>
               <input
                 type="email"
                 name="email"
                 placeholder="Email Address"
-                className="email-input"
+                className="w-full px-3 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
                 value={form.email}
                 onChange={handleChange}
                 required
@@ -102,26 +110,26 @@ const Register = () => {
             </div>
           </div>
 
-          <div className="form-row">
-            <div className="input-container">
-              <label>University {renderTooltip('university')}</label>
+          <div className="flex flex-col md:flex-row mb-4">
+            <div className="w-full md:w-1/2 pr-0 md:pr-3 mb-4 md:mb-0">
+              <label className="block mb-1">University {renderTooltip('university')}</label>
               <input
                 type="text"
                 name="university"
                 placeholder="University Name"
-                className="university-input"
+                className="w-full px-3 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
                 value={form.university}
                 onChange={handleChange}
                 required
               />
             </div>
-            <div className="input-container">
-              <label>Social Status {renderTooltip('socialStatus')}</label>
+            <div className="w-full md:w-1/2 pl-0 md:pl-3">
+              <label className="block mb-1">Social Status {renderTooltip('socialStatus')}</label>
               <input
                 type="text"
                 name="socialStatus"
                 placeholder="Your Social Status"
-                className="social-status-input"
+                className="w-full px-3 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
                 value={form.socialStatus}
                 onChange={handleChange}
                 required
@@ -129,27 +137,27 @@ const Register = () => {
             </div>
           </div>
 
-          <div className="form-row">
-            <div className="input-container">
-              <label>Phone Number {renderTooltip('phoneNumber')}</label>
+          <div className="flex flex-col md:flex-row mb-4">
+            <div className="w-full md:w-1/2 pr-0 md:pr-3 mb-4 md:mb-0">
+              <label className="block mb-1">Phone Number {renderTooltip('phoneNumber')}</label>
               <input
                 type="tel"
                 name="phoneNumber"
                 placeholder="+63 999 999 9999"
-                className="phone-number-input"
-                pattern="\+63 [0-9]{3} [0-9]{3} [0-9]{4}"
+                className="w-full px-3 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
+                pattern="[0-9]{11}"
                 value={form.phoneNumber}
                 onChange={handleChange}
                 required
               />
             </div>
-            <div className="input-container">
-              <label>Username {renderTooltip('username')}</label>
+            <div className="w-full md:w-1/2 pl-0 md:pl-3">
+              <label className="block mb-1">Username {renderTooltip('username')}</label>
               <input
                 type="text"
                 name="username"
                 placeholder="Username"
-                className="username-input"
+                className="w-full px-3 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
                 value={form.username}
                 onChange={handleChange}
                 required
@@ -157,40 +165,44 @@ const Register = () => {
             </div>
           </div>
 
-          <div className="form-row">
-            <div className="input-container">
-              <label>Password {renderTooltip('password')}</label>
+          <div className="flex flex-col md:flex-row mb-4">
+            <div className="w-full md:w-1/2 pr-0 md:pr-3 mb-4 md:mb-0">
+              <label className="block mb-1">Password {renderTooltip('password')}</label>
               <input
                 type="password"
                 name="password"
-                className="password-input"
+                className="w-full px-3 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
                 value={form.password}
                 onChange={handleChange}
                 required
               />
             </div>
-            <div className="input-container">
-              <label>Confirm Password {renderTooltip('confirmPassword')}</label>
+            <div className="w-full md:w-1/2 pl-0 md:pl-3">
+              <label className="block mb-1">Confirm Password {renderTooltip('confirmPassword')}</label>
               <input
                 type="password"
                 name="confirmPassword"
-                className="password-input"
+                className="w-full px-3 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
                 value={form.confirmPassword}
                 onChange={handleChange}
                 required
               />
               {passwordMismatch && touched.confirmPassword && (
-                <span className="password-mismatch-tooltip">Passwords do not match.</span>
+                <span className="text-red-500 text-xs">Passwords do not match.</span>
               )}
             </div>
           </div>
 
-          <div className="button-container">
-            <button type="submit" className="register-button">Register</button>
+          <div className="flex justify-end">
+            <button type="submit" className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
+              Register
+            </button>
           </div>
         </form>
       </div>
-      <div className="register-bg"></div>
+
+      <div className="md:w-1/2 bg-cover bg-center h-64 md:h-auto" style={{backgroundImage: `url(${backgroundImage})`}}>
+      </div>
     </div>
   );
 };
