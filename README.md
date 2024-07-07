@@ -14,7 +14,7 @@ BSCS 3-3
 
 ### Node.js and npm
 
-Before installing the Filo Travel Website, ensure you have Node.js and npm installed on your system. Follow these steps to install Node.js and npm:
+Before installing the DoorMe Website, ensure you have Node.js and npm installed on your system. Follow these steps to install Node.js and npm:
 
 1. **Download Node.js:**
    - Visit [nodejs.org](https://nodejs.org/) and download the latest version of Node.js for your operating system.
@@ -33,7 +33,7 @@ Before installing the Filo Travel Website, ensure you have Node.js and npm insta
 
 ### React and Dependencies
 
-To set up the Filo Travel Website locally, follow these steps:
+To set up the DoorMe Website locally, follow these steps:
 
 1. **Clone the repository:**
     ```sh
@@ -55,7 +55,7 @@ To set up the Filo Travel Website locally, follow these steps:
      ```
    - This will create a new React project in the `doorme` directory and automatically install React and its dependencies.
 
-To set up the Filo Travel Website locally, follow these steps:
+To set up the DoorMe Website locally, follow these steps:
 
 1. **Clone the repository:**
     ```sh
@@ -65,13 +65,22 @@ To set up the Filo Travel Website locally, follow these steps:
 2. **Install dependencies:**
 - First, ensure you have Node.js and npm installed. Then, install React and other necessary packages:
     ```sh
-    npx create-react-app doorme
-    cd doorme
-    npm install react-transition-group
-    npm install react-router-dom
-    npm install -D tailwindcss
-    npm install react-transition-group
-
+   npm install react-transition-group
+   npm install react-transition-group
+   npm install react-router-dom
+   npm install -D tailwindcss
+   npm install express sqlite3 body-parser cors
+   npm install axios
+   npm install clsx
+   npm install tailwind-merge
+   npm install class-variance-authority
+   npm install autoprefixer
+   npm i --save @fortawesome/fontawesome-svg-core
+   npm install --save @fortawesome/free-solid-svg-icons
+   npm install --save @fortawesome/react-fontawesome
+   npm install @mui/material @emotion/react @emotion/styled
+   npm install mapbox-gl @mapbox/mapbox-gl-geocoder open-location-code
+    
 ## Usage
 
 To start the development server, run:
