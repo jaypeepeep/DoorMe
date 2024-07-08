@@ -19,6 +19,11 @@ import Dryer from '../../assets/dryer_icon.png';
 import SecurityCamera from '../../assets/security_icon.png';
 import Bicycle from '../../assets/bicycle_icon.png';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
+import Map, { Marker } from 'react-map-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import DarkButtonLong from '../../components/buttons/DarkButtonLong';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const ListingInfo = () => {
     const [showAmenities, setShowAmenities] = useState(false);
@@ -41,6 +46,10 @@ const ListingInfo = () => {
         Refrigerator: Refrigerator,
         Bicycles: Bicycle
     };
+
+    const MAPBOX_TOKEN = 'pk.eyJ1IjoicGVybWFya3kiLCJhIjoiY2x5MW5lNTJzMHRkczJrcHo2NmprZzMwbSJ9.3vlFP5qZY7YBVQcjul9GIg';
+
+    const [startDate, setStartDate] = useState(new Date());
 
     return (
         <div className="flex-auto max-w-6xl mx-auto ml-[132px] mt-[30px] p-6">
@@ -161,30 +170,74 @@ const ListingInfo = () => {
                             {showAmenities ? 'Show less' : 'Show all 37 amenities'}
                         </button>
                     </div>
-
-                    {/* Location Map */}
-                    <div className="mt-6">
-                        <h2 className="text-lg font-semibold mb-2">Location</h2>
-                        <img src="path/to/map.jpg" alt="Map" className="w-full rounded-lg" />
-                    </div>
                 </div>
 
                 {/* Right Column */}
-                <div className="w-auto bg-white rounded-lg shadow-lg border-2 p-5 sticky top-6 ml-16 mr-[-102px] mt-[-98px]">
+                <div className="w-auto h-auto bg-white rounded-lg shadow-lg border-2 p-5 sticky top-6 ml-16 mr-[-102px] mt-[-98px]">
                     <div className="flex flex-row items-center space-x-2">
-                    <h2 className="text-xl font-semibold mb-2">₱5,000 <span className="text-sm font-normal">/ month</span></h2>
-                    <div className="flex items-center">
-                        <StarBorderIcon style={{ fontSize: '20px', marginRight: '4px', color: 'black' }} />
-                        <span className="text-black">5.0 ·</span>
+                        <h2 className="text-xl font-semibold mb-2 mr-[70px]">₱5,000 <span className="text-sm font-normal">/ month</span></h2>
+                        <div className="flex items-center">
+                            <StarBorderIcon style={{ fontSize: '20px', marginRight: '4px', color: 'black' }} />
+                            <span className="text-black">5.0 ·</span>
+                        </div>
+                        <span className="text-black underline">7 reviews</span>
                     </div>
-                    <span className="text-black">7 reviews</span>
+                    
+                    <div className="outline outline-2 outline-black rounded-md mb-6 mt-4">
+                        <h4 className="text-xs font-semibold p-2">Notice!</h4>
+                        <p className="text-s font-normal p-2 text-gray-400">Owner of this listing was active 3 months ago. This listing was updated 5 months ago.</p>
                     </div>
-                    <div className="flex items-center mb-4">
-                        <CheckOutlinedIcon className="h-5 w-5 text-blue-600 mr-2" />
-                        <span className="text-blue-600">4.84 · 123 reviews</span>
+
+                    <DarkButtonLong>Reserve</DarkButtonLong>
+                    
+                    <div className="border-b-2 border-b-gray-300 pb-5 mb-4">
+                        <h2 className="text-lg font-semibold mt-6 mb-2">Send an inquiry</h2>
+                        <div className="outline outline-2 rounded-lg mt-4 p-4">
+                            <h4 className="text-xs font-semibold mb-2">Your Name</h4>
+                            <input type="text" className="w-full outline-none border-none border-black rounded-lg" placeholder="Enter your name" />
+                        </div>
+
+                        <div className="border-r-2 border-b-2 mt-4 p-4">
+                            <h4 className="text-xs font-semibold mb-2">Your message to the Landlord</h4>
+                            <input type="text" className="w-full h-[150px] outline-none border-none border-black rounded-lg" placeholder="Type here..." />
+                        </div>
                     </div>
-                    {/* Add booking form components here */}
-                    <button className="bg-rose-600 hover:bg-rose-700 text-white font-bold py-2 px-4 rounded w-full">Reserve</button>
+                    <DarkButtonLong>Send Message</DarkButtonLong>
+
+                    <div>
+                        <h2 className="text-lg font-semibold mt-6 mb-2">Schedule a Visit</h2>
+                        <div className="p-4">
+                            <DatePicker
+                                selected={startDate}
+                                onChange={(date) => setStartDate(date)}
+                                inline
+                                calendarClassName="w-full pt-2 pl-11 border-none items-center"
+                                dayClassName={(date) =>
+                                    date.getDay() === 0 ? "text-red-600" : undefined
+                                }
+                            />
+                        </div>
+                    </div>
+                    <DarkButtonLong>Schedule Visit</DarkButtonLong>
+                </div>
+
+                {/* Location Map */}
+                <div className="mt-6 w-full">
+                    <h2 className="text-lg font-semibold mb-2">Location</h2>
+                    <div className="w-full rounded-lg overflow-hidden h-96">
+                        <Map
+                            initialViewState={{
+                                longitude: 44.84584351960967,
+                                latitude: -0.5766123909338234,
+                                zoom: 14
+                            }}
+                            style={{ width: '100%', height: '100%' }}
+                            mapStyle="mapbox://styles/mapbox/streets-v11"
+                            mapboxAccessToken={MAPBOX_TOKEN}
+                        >
+                            <Marker longitude={44.84584351960967} latitude={-0.5766123909338234} color="red" />
+                        </Map>
+                    </div>
                 </div>
             </div>
         </div>
