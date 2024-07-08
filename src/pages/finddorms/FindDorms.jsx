@@ -8,6 +8,8 @@ import { Button } from "../../components/buttons/Button";
 import ListingBesideMapCards from "../../components/cards/ListingBesideMapCards";
 import backgroundImage from "../../assets/FindBg.png";
 import mapLogo from "../../assets/mapLogo.png";
+import logoImage from "../../assets/LogoImage.png";
+import housingMap from "../../assets/Housing-Map.png";
 import FilterHome from "../../components/filterhome/FilterHome"; // Import the new FilterHome component
 
 const FindDorms = () => {
@@ -69,8 +71,14 @@ const FindDorms = () => {
 
       setMap(mapInstance);
 
-      // Create the initial marker and set its position
-      const initialMarker = new mapboxgl.Marker()
+      const initialMarkerElement = document.createElement("div");
+      initialMarkerElement.style.width = "40px";
+      initialMarkerElement.style.height = "40px";
+      initialMarkerElement.style.backgroundImage = `url(${logoImage})`; // Use your mapLogo path here
+      initialMarkerElement.style.backgroundSize = "cover";
+      initialMarkerElement.style.cursor = "pointer";
+
+      const initialMarker = new mapboxgl.Marker(initialMarkerElement)
         .setLngLat(initialCenter)
         .addTo(mapInstance);
       setMarker(initialMarker);
@@ -79,7 +87,14 @@ const FindDorms = () => {
         .then((response) => response.json())
         .then((data) => {
           data.forEach((house) => {
-            new mapboxgl.Marker()
+            const markerElement = document.createElement("div");
+            markerElement.style.width = "35px";
+            markerElement.style.height = "35px";
+            markerElement.style.backgroundImage = `url(${housingMap})`;
+            markerElement.style.backgroundSize = "cover";
+            markerElement.style.cursor = "pointer";
+
+            new mapboxgl.Marker(markerElement)
               .setLngLat([house.longitude, house.latitude])
               .addTo(mapInstance);
           });
