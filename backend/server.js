@@ -10,6 +10,7 @@ const port = 5000;
 app.use(cors());
 app.use(bodyParser.json());
 
+
 // Connect to SQLite database
 const dbPath = path.resolve(__dirname, 'database.sqlite');
 const db = new sqlite3.Database(dbPath);
