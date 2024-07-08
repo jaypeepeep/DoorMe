@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
@@ -8,8 +9,6 @@ import ListingBesideMapCards from "../../components/cards/ListingBesideMapCards"
 import backgroundImage from "../../assets/FindBg.png";
 import mapLogo from "../../assets/mapLogo.png";
 import FilterHome from "../../components/filterhome/FilterHome"; // Import the new FilterHome component
-import covenantGarden from "../../assets/covenantGarden.png";
-import elpueblo from "../../assets/elpueblocondo.png";
 
 const FindDorms = () => {
   const [map, setMap] = useState(null);
@@ -70,11 +69,22 @@ const FindDorms = () => {
 
       setMap(mapInstance);
 
-      // Create a marker and set its initial position
+      // Create the initial marker and set its position
       const initialMarker = new mapboxgl.Marker()
         .setLngLat(initialCenter)
         .addTo(mapInstance);
       setMarker(initialMarker);
+
+      fetch("http://localhost:5000/api/housing")
+        .then((response) => response.json())
+        .then((data) => {
+          data.forEach((house) => {
+            new mapboxgl.Marker()
+              .setLngLat([house.longitude, house.latitude])
+              .addTo(mapInstance);
+          });
+        })
+        .catch((error) => console.error("Error fetching housing data:", error));
     };
 
     if (!map) {
