@@ -21,6 +21,7 @@ const Profile = () => {
     localStorage.removeItem("user");
     setIsLoggedIn(false);
     navigate("/");
+    window.location.reload();
   };
 
   const getAccountType = () => {
