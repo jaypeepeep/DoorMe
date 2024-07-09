@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
 const path = require('path');
-const bcrypt = require('bcrypt');
 
 const app = express();
 const port = 5000;
@@ -30,24 +29,18 @@ db.serialize(() => {
     )
   `);
 
-  // Insert initial user
+  // Insert initial user (without hashing)
   const initialUser = `
     INSERT INTO users (fullName, email, university, socialStatus, phoneNumber, username, password)
-    VALUES ('John Doe', 'john@example.com', 'Example University', 'Student', '+63 999 999 9999', 'john_doe', ?)
+    VALUES ('John Doe', 'john@example.com', 'Example University', 'Student', '+63 999 999 9999', 'john_doe', 'password123')
   `;
-
-  bcrypt.hash('password123', 10, (err, hash) => {
-    if (err) {
-      console.error('Error hashing password:', err.message);
-    } else {
-      db.run(initialUser, [hash], function (err) {
-        if (err && err.message.includes('SQLITE_CONSTRAINT')) {
-          // The initial user already exists, no need to insert again
-          return;
-        } else if (err) {
-          console.error('Error inserting initial user:', err.message);
-        }
-      });
+  
+  db.run(initialUser, function (err) {
+    if (err && err.message.includes('SQLITE_CONSTRAINT')) {
+      // The initial user already exists, no need to insert again
+      return;
+    } else if (err) {
+      console.error('Error inserting initial user:', err.message);
     }
   });
 
@@ -101,46 +94,34 @@ app.get('/api/housing', (req, res) => {
   });
 });
 
-// Register user endpoint
+// Register user endpoint (without password hashing)
 app.post('/api/register', (req, res) => {
   const { fullName, email, university, socialStatus, phoneNumber, username, password } = req.body;
 
-  bcrypt.hash(password, 10, (err, hash) => {
+  const query = `
+    INSERT INTO users (fullName, email, university, socialStatus, phoneNumber, username, password)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `;
+  db.run(query, [fullName, email, university, socialStatus, phoneNumber, username, password], function (err) {
     if (err) {
-      return res.status(500).json({ error: 'Error hashing password' });
+      return res.status(500).json({ error: err.message });
     }
-
-    const query = `
-      INSERT INTO users (fullName, email, university, socialStatus, phoneNumber, username, password)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `;
-    db.run(query, [fullName, email, university, socialStatus, phoneNumber, username, hash], function (err) {
-      if (err) {
-        return res.status(500).json({ error: err.message });
-      }
-      res.json({ message: 'User registered successfully', id: this.lastID });
-    });
+    res.json({ message: 'User registered successfully', id: this.lastID });
   });
 });
 
-// Login endpoint
+// Login endpoint (without password hashing)
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
   const query = `
-    SELECT * FROM users WHERE username = ?
+    SELECT * FROM users WHERE username = ? AND password = ?
   `;
-  db.get(query, [username], (err, row) => {
+  db.get(query, [username, password], (err, row) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
     if (row) {
-      bcrypt.compare(password, row.password, (err, result) => {
-        if (result) {
-          res.json({ message: 'Login successful', user: row });
-        } else {
-          res.status(400).json({ error: 'Invalid username or password' });
-        }
-      });
+      res.json({ message: 'Login successful', user: row });
     } else {
       res.status(400).json({ error: 'Invalid username or password' });
     }
