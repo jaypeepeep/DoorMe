@@ -74,8 +74,8 @@ db.serialize(() => {
   const initialHousingData = `
     INSERT INTO housing (image, title, details, price, rating, reviews, latitude, longitude)
     VALUES
-     ('src/assets/covenantGarden.png', 'Covent Garden Sta. Mesa Condo for Rent near PUP & UERM', '4-6 guests · Entire Condo · 6 beds · Shared bath · Wifi · Kitchen · Free Parking', 'Php 5,680 /month', 5.0, 318, 14.6, 120.94),
-    ('src/assets/elpueblocondo.png', 'El Pueblo Condo For Rent', '4-6 persons · Entire Room · 4 beds · 1 bath · Wifi · Kitchen', 'Php 6,755 /month', 5.0, 318, 14.6, 120.99)
+     ('src/assets/covenantGarden.png', 'Covent Garden Sta. Mesa Condo for Rent near PUP & UERM', '4-6 guests · Entire Condo · 6 beds · Shared bath · Wifi · Kitchen · Free Parking', 'Php 5,680 /month', 5.0, 318, 14.60185734269596, 121.0126889565575),
+    ('src/assets/elpueblocondo.png', 'El Pueblo Condo For Rent', '4-6 persons · Entire Room · 4 beds · 1 bath · Wifi · Kitchen', 'Php 6,755 /month', 5.0, 318, 14.595540806870547, 121.01224216962027)
   `;
 
   db.run(initialHousingData, function (err) {
