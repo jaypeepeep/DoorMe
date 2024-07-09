@@ -108,7 +108,7 @@ const FindDorms = () => {
     }
 
     return () => map && map.remove();
-  }, [map]);
+  }, []);
 
   useEffect(() => {
     if (map && fromInput && universityCoordinates[fromInput]) {
