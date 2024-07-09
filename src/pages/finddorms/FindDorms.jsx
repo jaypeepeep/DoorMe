@@ -16,7 +16,6 @@ import FilterHome from "../../components/filterhome/FilterHome"; // Import the n
 const FindDorms = () => {
   const [map, setMap] = useState(null);
   const [fromInput, setFromInput] = useState("");
-  const [distance, setDistance] = useState(null);
   const [user, setUser] = useState(null);
   const [showPriceDropdown, setShowPriceDropdown] = useState(false);
   const [showPlaceDropdown, setShowPlaceDropdown] = useState(false);
@@ -95,9 +94,13 @@ const FindDorms = () => {
             markerElement.style.backgroundSize = "cover";
             markerElement.style.cursor = "pointer";
 
-            new mapboxgl.Marker(markerElement)
+            const marker = new mapboxgl.Marker(markerElement)
               .setLngLat([house.longitude, house.latitude])
               .addTo(mapInstance);
+
+            marker.getElement().addEventListener("click", () => {
+              fetchRoute(mapInstance); // Pass mapInstance to fetchRoute
+            });
           });
         })
         .catch((error) => console.error("Error fetching housing data:", error));
@@ -120,59 +123,40 @@ const FindDorms = () => {
     }
   }, [fromInput, map]);
 
-  const handleSetWaypointFromInput = async () => {
-    const geocoder = new MapboxGeocoder({
-      accessToken: mapboxgl.accessToken,
-      mapboxgl: mapboxgl,
-    });
-  };
-
-  const fetchRoute = async () => {
-    const coordinates = universityCoordinates[fromInput];
-    if (!coordinates) {
-      alert("Please select a valid university.");
-      return;
-    }
-
+  const fetchRoute = async (mapInstance) => {
     const route = {
       type: "LineString",
       coordinates: [
-        [coordinates[0], coordinates[1]],
-        [coordinates[0] + 0.01, coordinates[1] + 0.01],
+        [121.0108, 14.5979],
+        [121.01224216962, 14.5955408068705],
       ],
     };
 
-    setDistance(1.5);
-
-    if (map.getSource("route")) {
-      map.getSource("route").setData({
-        type: "Feature",
-        geometry: route,
-      });
-    } else {
-      map.addLayer({
-        id: "route",
-        type: "line",
-        source: {
-          type: "geojson",
-          data: {
-            type: "Feature",
-            geometry: route,
+    try {
+      if (mapInstance && mapInstance.getSource("route")) {
+        mapInstance.getSource("route").setData({
+          type: "Feature",
+          geometry: route,
+        });
+      } else {
+        mapInstance.addLayer({
+          id: "route",
+          type: "line",
+          source: {
+            type: "geojson",
+            data: {
+              type: "Feature",
+              geometry: route,
+            },
           },
-        },
-        paint: {
-          "line-color": "#3887be",
-          "line-width": 5,
-        },
-      });
-    }
-  };
-
-  const clearRoute = () => {
-    setDistance(null);
-    if (map.getLayer("route")) {
-      map.removeLayer("route");
-      map.removeSource("route");
+          paint: {
+            "line-color": "#3887be",
+            "line-width": 5,
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Error adding route layer:", error);
     }
   };
 
@@ -202,19 +186,6 @@ const FindDorms = () => {
                 ))}
               </select>
             )}
-            <button
-              className="mx-2 text-[#1A1A1A] hover:bg-gray-100 p-3 rounded-full"
-              onClick={handleSetWaypointFromInput}
-            >
-              <img src={mapLogo} className="w-6 h-6" alt="Map Logo" />
-            </button>
-            <Button
-              variant="solidm"
-              onClick={fetchRoute}
-              className="rounded-r-full"
-            >
-              Search
-            </Button>
           </div>
         </div>
 
@@ -244,17 +215,6 @@ const FindDorms = () => {
             <ListingBesideMapCards />
           </div>
         </div>
-
-        {distance !== null && (
-          <div className="mt-4 p-4 bg-white text-black rounded-lg shadow-lg">
-            <p>
-              <strong>Distance:</strong> {distance.toFixed(2)} km
-            </p>
-            <Button variant="solidm" onClick={clearRoute} className="mt-2">
-              Clear Route
-            </Button>
-          </div>
-        )}
       </main>
     </div>
   );
