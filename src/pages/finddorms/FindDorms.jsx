@@ -4,14 +4,13 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
-import { Button } from "../../components/buttons/Button";
 import ListingBesideMapCards from "../../components/cards/ListingBesideMapCards";
 import backgroundImage from "../../assets/FindBg.png";
 import mapLogo from "../../assets/mapLogo.png";
 import logoImage from "../../assets/LogoImage.png";
 import housingMap from "../../assets/Housing-Map.png";
 import universityMap from "../../assets/University-Map.png";
-import FilterHome from "../../components/filterhome/FilterHome"; // Import the new FilterHome component
+import FilterHome from "../../components/filterhome/FilterHome";
 
 const FindDorms = () => {
   const [map, setMap] = useState(null);
@@ -74,7 +73,7 @@ const FindDorms = () => {
       const initialMarkerElement = document.createElement("div");
       initialMarkerElement.style.width = "40px";
       initialMarkerElement.style.height = "40px";
-      initialMarkerElement.style.backgroundImage = `url(${universityMap})`; // Use your mapLogo path here
+      initialMarkerElement.style.backgroundImage = `url(${universityMap})`;
       initialMarkerElement.style.backgroundSize = "cover";
       initialMarkerElement.style.cursor = "pointer";
 
@@ -99,7 +98,10 @@ const FindDorms = () => {
               .addTo(mapInstance);
 
             marker.getElement().addEventListener("click", () => {
-              fetchRoute(mapInstance); // Pass mapInstance to fetchRoute
+              fetchRoute(mapInstance, initialCenter, [
+                house.longitude,
+                house.latitude,
+              ]);
             });
           });
         })
@@ -123,13 +125,10 @@ const FindDorms = () => {
     }
   }, [fromInput, map]);
 
-  const fetchRoute = async (mapInstance) => {
+  const fetchRoute = async (mapInstance, fromCoordinates, toCoordinates) => {
     const route = {
       type: "LineString",
-      coordinates: [
-        [121.0108, 14.5979],
-        [121.01224216962, 14.5955408068705],
-      ],
+      coordinates: [fromCoordinates, toCoordinates],
     };
 
     try {
@@ -188,18 +187,6 @@ const FindDorms = () => {
             )}
           </div>
         </div>
-
-        {/* Use the FilterHome component */}
-        <FilterHome
-          selectedPrice={selectedPrice}
-          setSelectedPrice={setSelectedPrice}
-          showPriceDropdown={showPriceDropdown}
-          setShowPriceDropdown={setShowPriceDropdown}
-          selectedPlace={selectedPlace}
-          setSelectedPlace={setSelectedPlace}
-          showPlaceDropdown={showPlaceDropdown}
-          setShowPlaceDropdown={setShowPlaceDropdown}
-        />
 
         <div className="mb-16 flex flex-col lg:flex-row gap-8">
           <div className="lg:w-1/2">
