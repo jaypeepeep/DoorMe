@@ -16,11 +16,8 @@ const FindDorms = () => {
   const [map, setMap] = useState(null);
   const [fromInput, setFromInput] = useState("");
   const [user, setUser] = useState(null);
-  const [showPriceDropdown, setShowPriceDropdown] = useState(false);
-  const [showPlaceDropdown, setShowPlaceDropdown] = useState(false);
-  const [selectedPrice, setSelectedPrice] = useState("Price");
-  const [selectedPlace, setSelectedPlace] = useState("Type of place");
   const [marker, setMarker] = useState(null);
+  const [initialCenter, setInitialCenter] = useState(null);
 
   const universityCoordinates = {
     "Adamson University": [120.986, 14.6042],
@@ -48,9 +45,8 @@ const FindDorms = () => {
 
     const initializeMap = () => {
       const initialCenter =
-        storedUser && universityCoordinates[JSON.parse(storedUser).university]
-          ? universityCoordinates[JSON.parse(storedUser).university]
-          : [121.774, 12.8797];
+        universityCoordinates[JSON.parse(storedUser).university];
+      setInitialCenter(initialCenter);
 
       const mapInstance = new mapboxgl.Map({
         container: "map",
@@ -117,10 +113,12 @@ const FindDorms = () => {
 
   useEffect(() => {
     if (map && fromInput && universityCoordinates[fromInput]) {
+      const newCenter = universityCoordinates[fromInput];
+      setInitialCenter(newCenter);
       map.setMaxBounds(null);
       map.setZoom(12);
-      marker.setLngLat(universityCoordinates[fromInput]);
-      map.setCenter(universityCoordinates[fromInput]);
+      marker.setLngLat(newCenter);
+      map.setCenter(newCenter);
       map.setMaxBounds(map.getBounds());
     }
   }, [fromInput, map]);
@@ -132,7 +130,7 @@ const FindDorms = () => {
     };
 
     try {
-      if (mapInstance && mapInstance.getSource("route")) {
+      if (mapInstance.getSource("route")) {
         mapInstance.getSource("route").setData({
           type: "Feature",
           geometry: route,
