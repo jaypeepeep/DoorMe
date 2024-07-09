@@ -34,7 +34,7 @@ db.serialize(() => {
     INSERT INTO users (fullName, email, university, socialStatus, phoneNumber, username, password)
     VALUES ('John Doe', 'john@example.com', 'Example University', 'Student', '+63 999 999 9999', 'john_doe', 'password123')
   `;
-  
+
   db.run(initialUser, function (err) {
     if (err && err.message.includes('SQLITE_CONSTRAINT')) {
       // The initial user already exists, no need to insert again
