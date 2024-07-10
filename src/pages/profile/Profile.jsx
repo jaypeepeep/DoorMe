@@ -37,7 +37,7 @@ const Profile = () => {
               </NavLink>
             </li>
             <li className="menu-item">
-              <NavLink to="bookmarks" className={({ isActive }) => (isActive ? "active" : "")}>
+              <NavLink to="BookmarksSection" className={({ isActive }) => (isActive ? "active" : "")}>
                 <span className="material-icons">bookmark</span>
                 <span>Bookmarks</span>
               </NavLink>
