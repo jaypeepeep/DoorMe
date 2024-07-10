@@ -4,38 +4,59 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
-import { Button } from "../../components/buttons/Button";
 import ListingBesideMapCards from "../../components/cards/ListingBesideMapCards";
 import backgroundImage from "../../assets/FindBg.png";
 import mapLogo from "../../assets/mapLogo.png";
 import logoImage from "../../assets/LogoImage.png";
 import housingMap from "../../assets/Housing-Map.png";
 import universityMap from "../../assets/University-Map.png";
-import FilterHome from "../../components/filterhome/FilterHome"; // Import the new FilterHome component
+import distanceMap from "../../assets/Distance-Map.png";
+import FilterHome from "../../components/filterhome/FilterHome";
 
 const FindDorms = () => {
   const [map, setMap] = useState(null);
   const [fromInput, setFromInput] = useState("");
-  const [distance, setDistance] = useState(null);
   const [user, setUser] = useState(null);
-  const [showPriceDropdown, setShowPriceDropdown] = useState(false);
-  const [showPlaceDropdown, setShowPlaceDropdown] = useState(false);
-  const [selectedPrice, setSelectedPrice] = useState("Price");
-  const [selectedPlace, setSelectedPlace] = useState("Type of place");
   const [marker, setMarker] = useState(null);
+  const [initialCenter, setInitialCenter] = useState(null);
+  const [universities, setUniversities] = useState({});
 
-  const universityCoordinates = {
-    "Adamson University": [120.986, 14.6042],
-    "Ateneo de Manila University": [121.0777, 14.6407],
-    "De La Salle University": [120.9932, 14.5648],
-    "De La Salle-College of Saint Benilde": [120.9951, 14.5636],
-    "National University, Philippines": [120.9946, 14.6043],
-    "Polytechnic University of the Philippines": [121.0108, 14.5979],
-    "University of Santo Tomas": [120.9896, 14.6093],
-    "University of the Philippines Diliman": [121.0657, 14.6537],
-    "University of the Philippines Manila": [120.9918, 14.5806],
-    "University of the Philippines System": [121.0657, 14.6537],
-  };
+  useEffect(() => {
+    mapboxgl.accessToken =
+      "pk.eyJ1IjoicGVybWFya3kiLCJhIjoiY2x5MW5lNTJzMHRkczJrcHo2NmprZzMwbSJ9.3vlFP5qZY7YBVQcjul9GIg";
+
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+      setFromInput(parsedUser.university);
+    }
+
+    // Fetch universities data
+    axios
+      .get("http://localhost:5000/api/universities")
+      .then((response) => {
+        const fetchedUniversities = {};
+        response.data.forEach((university) => {
+          fetchedUniversities[university.name] = [
+            university.longitude,
+            university.latitude,
+          ];
+        });
+        setUniversities(fetchedUniversities);
+      })
+      .catch((error) => console.error("Error fetching universities:", error));
+  }, []);
+
+  useEffect(() => {
+    if (map && fromInput && universities[fromInput]) {
+      const newCenter = universities[fromInput];
+      map.setMaxBounds(null);
+      map.setZoom(13);
+      marker.setLngLat(newCenter);
+      map.setCenter(newCenter);
+    }
+  }, [fromInput, map, universities]);
 
   useEffect(() => {
     mapboxgl.accessToken =
@@ -49,15 +70,10 @@ const FindDorms = () => {
     }
 
     const initializeMap = () => {
-      const initialCenter =
-        storedUser && universityCoordinates[JSON.parse(storedUser).university]
-          ? universityCoordinates[JSON.parse(storedUser).university]
-          : [121.774, 12.8797];
-
       const mapInstance = new mapboxgl.Map({
         container: "map",
         style: "mapbox://styles/mapbox/streets-v11",
-        center: initialCenter,
+        center: initialCenter || [121.0108, 14.5979], // Default center if not initialized
         zoom: 13,
         minZoom: 13,
       });
@@ -75,12 +91,12 @@ const FindDorms = () => {
       const initialMarkerElement = document.createElement("div");
       initialMarkerElement.style.width = "40px";
       initialMarkerElement.style.height = "40px";
-      initialMarkerElement.style.backgroundImage = `url(${universityMap})`; // Use your mapLogo path here
+      initialMarkerElement.style.backgroundImage = `url(${universityMap})`;
       initialMarkerElement.style.backgroundSize = "cover";
       initialMarkerElement.style.cursor = "pointer";
 
       const initialMarker = new mapboxgl.Marker(initialMarkerElement)
-        .setLngLat(initialCenter)
+        .setLngLat(initialCenter || [121.0108, 14.5979]) // Default marker position if not initialized
         .addTo(mapInstance);
       setMarker(initialMarker);
 
@@ -95,9 +111,16 @@ const FindDorms = () => {
             markerElement.style.backgroundSize = "cover";
             markerElement.style.cursor = "pointer";
 
-            new mapboxgl.Marker(markerElement)
+            const marker = new mapboxgl.Marker(markerElement)
               .setLngLat([house.longitude, house.latitude])
               .addTo(mapInstance);
+
+            marker.getElement().addEventListener("click", () => {
+              fetchRoute(mapInstance, initialCenter, [
+                house.longitude,
+                house.latitude,
+              ]);
+            });
           });
         })
         .catch((error) => console.error("Error fetching housing data:", error));
@@ -108,76 +131,78 @@ const FindDorms = () => {
     }
 
     return () => map && map.remove();
-  }, []);
+  }, [initialCenter]);
 
-  useEffect(() => {
-    if (map && fromInput && universityCoordinates[fromInput]) {
-      map.setMaxBounds(null);
-      map.setZoom(12);
-      marker.setLngLat(universityCoordinates[fromInput]);
-      map.setCenter(universityCoordinates[fromInput]);
-      map.setMaxBounds(map.getBounds());
-    }
-  }, [fromInput, map]);
+  const fetchRoute = async (mapInstance, fromCoordinates, toCoordinates) => {
+    try {
+      const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${fromCoordinates[0]},${fromCoordinates[1]};${toCoordinates[0]},${toCoordinates[1]}?geometries=geojson&access_token=${mapboxgl.accessToken}`;
 
-  const handleSetWaypointFromInput = async () => {
-    const geocoder = new MapboxGeocoder({
-      accessToken: mapboxgl.accessToken,
-      mapboxgl: mapboxgl,
-    });
-  };
+      const response = await fetch(url);
+      const data = await response.json();
 
-  const fetchRoute = async () => {
-    const coordinates = universityCoordinates[fromInput];
-    if (!coordinates) {
-      alert("Please select a valid university.");
-      return;
-    }
+      // Extract the route from the response
+      const route = data.routes[0].geometry;
 
-    const route = {
-      type: "LineString",
-      coordinates: [
-        [coordinates[0], coordinates[1]],
-        [coordinates[0] + 0.01, coordinates[1] + 0.01],
-      ],
-    };
+      // Calculate the distance
+      const distance = data.routes[0].distance / 1000; // convert meters to kilometers
 
-    setDistance(1.5);
+      // Calculate the midpoint for displaying the distance
+      const midPointIndex = Math.floor(route.coordinates.length / 2);
+      const midPoint = route.coordinates[midPointIndex];
 
-    if (map.getSource("route")) {
-      map.getSource("route").setData({
-        type: "Feature",
-        geometry: route,
-      });
-    } else {
-      map.addLayer({
-        id: "route",
-        type: "line",
-        source: {
-          type: "geojson",
-          data: {
-            type: "Feature",
-            geometry: route,
+      if (mapInstance.getSource("route")) {
+        mapInstance.getSource("route").setData({
+          type: "Feature",
+          geometry: route,
+        });
+      } else {
+        mapInstance.addLayer({
+          id: "route",
+          type: "line",
+          source: {
+            type: "geojson",
+            data: {
+              type: "Feature",
+              geometry: route,
+            },
           },
-        },
-        paint: {
-          "line-color": "#3887be",
-          "line-width": 5,
-        },
-      });
-    }
-  };
+          paint: {
+            "line-color": "#3887be",
+            "line-width": 5,
+          },
+        });
+      }
 
-  const clearRoute = () => {
-    setDistance(null);
-    if (map.getLayer("route")) {
-      map.removeLayer("route");
-      map.removeSource("route");
+      // Remove the existing marker if it exists
+      if (marker) {
+        marker.remove();
+      }
+
+      // Create a custom marker element
+      const el = document.createElement("div");
+      el.className = "custom-marker";
+      el.style.backgroundImage = `url(${distanceMap})`;
+      el.style.width = "30px";
+      el.style.height = "30px";
+      el.style.backgroundSize = "100%";
+
+      // Create a popup with the distance
+      const popup = new mapboxgl.Popup({ offset: 25 }).setText(
+        `Distance: ${distance.toFixed(2)} km`
+      );
+
+      // Create a new marker with the custom element and set the popup
+      const distanceMarker = new mapboxgl.Marker(el)
+        .setLngLat(midPoint)
+        .setPopup(popup)
+        .addTo(mapInstance);
+    } catch (error) {
+      console.error("Error fetching the route:", error);
     }
   };
 
   return (
-    <div className="w-full font-poppins pt-[5%] bg-blue-50 min-h-screen">
+    <div className="w-full font-poppins pt-[10%] bg-blue-50 min-h-screen">
       <main className="max-w-7xl mx-auto py-8 px-4">
         <div className="text-center mb-8">
           <h2 className="text-2xl font-bold mb-2">Welcome to PahingaU!</h2>
@@ -195,40 +220,15 @@ const FindDorms = () => {
                 <option value="" disabled>
                   Select University
                 </option>
-                {Object.keys(universityCoordinates).map((option) => (
+                {Object.keys(universities).map((option) => (
                   <option key={option} value={option}>
                     {option}
                   </option>
                 ))}
               </select>
             )}
-            <button
-              className="mx-2 text-[#1A1A1A] hover:bg-gray-100 p-3 rounded-full"
-              onClick={handleSetWaypointFromInput}
-            >
-              <img src={mapLogo} className="w-6 h-6" alt="Map Logo" />
-            </button>
-            <Button
-              variant="solidm"
-              onClick={fetchRoute}
-              className="rounded-r-full"
-            >
-              Search
-            </Button>
           </div>
         </div>
-
-        {/* Use the FilterHome component */}
-        <FilterHome
-          selectedPrice={selectedPrice}
-          setSelectedPrice={setSelectedPrice}
-          showPriceDropdown={showPriceDropdown}
-          setShowPriceDropdown={setShowPriceDropdown}
-          selectedPlace={selectedPlace}
-          setSelectedPlace={setSelectedPlace}
-          showPlaceDropdown={showPlaceDropdown}
-          setShowPlaceDropdown={setShowPlaceDropdown}
-        />
 
         <div className="mb-16 flex flex-col lg:flex-row gap-8">
           <div className="lg:w-1/2">
@@ -244,17 +244,6 @@ const FindDorms = () => {
             <ListingBesideMapCards />
           </div>
         </div>
-
-        {distance !== null && (
-          <div className="mt-4 p-4 bg-white text-black rounded-lg shadow-lg">
-            <p>
-              <strong>Distance:</strong> {distance.toFixed(2)} km
-            </p>
-            <Button variant="solidm" onClick={clearRoute} className="mt-2">
-              Clear Route
-            </Button>
-          </div>
-        )}
       </main>
     </div>
   );
