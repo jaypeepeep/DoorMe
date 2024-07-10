@@ -42,7 +42,7 @@ function Login({ setIsLoggedIn }) {
         });
         if (response.data.message === "Login successful") {
           localStorage.setItem("user", JSON.stringify(response.data.user));
-          navigate("/Home");
+          navigate("/FindDorms");
           window.location.reload();
         }
       } catch (error) {
