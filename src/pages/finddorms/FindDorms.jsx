@@ -4,25 +4,21 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
-import { Button } from "../../components/buttons/Button";
 import ListingBesideMapCards from "../../components/cards/ListingBesideMapCards";
 import backgroundImage from "../../assets/FindBg.png";
 import mapLogo from "../../assets/mapLogo.png";
 import logoImage from "../../assets/LogoImage.png";
 import housingMap from "../../assets/Housing-Map.png";
 import universityMap from "../../assets/University-Map.png";
-import FilterHome from "../../components/filterhome/FilterHome"; // Import the new FilterHome component
+import distanceMap from "../../assets/Distance-Map.png";
+import FilterHome from "../../components/filterhome/FilterHome";
 
 const FindDorms = () => {
   const [map, setMap] = useState(null);
   const [fromInput, setFromInput] = useState("");
-  const [distance, setDistance] = useState(null);
   const [user, setUser] = useState(null);
-  const [showPriceDropdown, setShowPriceDropdown] = useState(false);
-  const [showPlaceDropdown, setShowPlaceDropdown] = useState(false);
-  const [selectedPrice, setSelectedPrice] = useState("Price");
-  const [selectedPlace, setSelectedPlace] = useState("Type of place");
   const [marker, setMarker] = useState(null);
+  const [initialCenter, setInitialCenter] = useState(null);
 
   const universityCoordinates = {
     "Adamson University": [120.986, 14.6042],
@@ -50,9 +46,8 @@ const FindDorms = () => {
 
     const initializeMap = () => {
       const initialCenter =
-        storedUser && universityCoordinates[JSON.parse(storedUser).university]
-          ? universityCoordinates[JSON.parse(storedUser).university]
-          : [121.774, 12.8797];
+        universityCoordinates[JSON.parse(storedUser).university];
+      setInitialCenter(initialCenter);
 
       const mapInstance = new mapboxgl.Map({
         container: "map",
@@ -75,7 +70,7 @@ const FindDorms = () => {
       const initialMarkerElement = document.createElement("div");
       initialMarkerElement.style.width = "40px";
       initialMarkerElement.style.height = "40px";
-      initialMarkerElement.style.backgroundImage = `url(${universityMap})`; // Use your mapLogo path here
+      initialMarkerElement.style.backgroundImage = `url(${universityMap})`;
       initialMarkerElement.style.backgroundSize = "cover";
       initialMarkerElement.style.cursor = "pointer";
 
@@ -95,9 +90,16 @@ const FindDorms = () => {
             markerElement.style.backgroundSize = "cover";
             markerElement.style.cursor = "pointer";
 
-            new mapboxgl.Marker(markerElement)
+            const marker = new mapboxgl.Marker(markerElement)
               .setLngLat([house.longitude, house.latitude])
               .addTo(mapInstance);
+
+            marker.getElement().addEventListener("click", () => {
+              fetchRoute(mapInstance, initialCenter, [
+                house.longitude,
+                house.latitude,
+              ]);
+            });
           });
         })
         .catch((error) => console.error("Error fetching housing data:", error));
@@ -112,72 +114,108 @@ const FindDorms = () => {
 
   useEffect(() => {
     if (map && fromInput && universityCoordinates[fromInput]) {
+      const newCenter = universityCoordinates[fromInput];
+      setInitialCenter(initialCenter);
       map.setMaxBounds(null);
       map.setZoom(12);
-      marker.setLngLat(universityCoordinates[fromInput]);
-      map.setCenter(universityCoordinates[fromInput]);
+      marker.setLngLat(newCenter);
+      map.setCenter(newCenter);
       map.setMaxBounds(map.getBounds());
     }
   }, [fromInput, map]);
 
-  const handleSetWaypointFromInput = async () => {
-    const geocoder = new MapboxGeocoder({
-      accessToken: mapboxgl.accessToken,
-      mapboxgl: mapboxgl,
-    });
+  const haversineDistance = (coords1, coords2) => {
+    const toRad = (value) => (value * Math.PI) / 180;
+
+    const R = 6371; // Radius of the Earth in kilometers
+    const lat1 = toRad(coords1[1]);
+    const lon1 = toRad(coords1[0]);
+    const lat2 = toRad(coords2[1]);
+    const lon2 = toRad(coords2[0]);
+
+    const dLat = lat2 - lat1;
+    const dLon = lon2 - lon1;
+
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return R * c; // Distance in kilometers
   };
 
-  const fetchRoute = async () => {
-    const coordinates = universityCoordinates[fromInput];
-    if (!coordinates) {
-      alert("Please select a valid university.");
-      return;
-    }
+  let distanceMarker;
 
-    const route = {
-      type: "LineString",
-      coordinates: [
-        [coordinates[0], coordinates[1]],
-        [coordinates[0] + 0.01, coordinates[1] + 0.01],
-      ],
-    };
+  const fetchRoute = async (mapInstance, fromCoordinates, toCoordinates) => {
+    try {
+      const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${fromCoordinates[0]},${fromCoordinates[1]};${toCoordinates[0]},${toCoordinates[1]}?geometries=geojson&access_token=${mapboxgl.accessToken}`;
 
-    setDistance(1.5);
+      const response = await fetch(url);
+      const data = await response.json();
 
-    if (map.getSource("route")) {
-      map.getSource("route").setData({
-        type: "Feature",
-        geometry: route,
-      });
-    } else {
-      map.addLayer({
-        id: "route",
-        type: "line",
-        source: {
-          type: "geojson",
-          data: {
-            type: "Feature",
-            geometry: route,
+      // Extract the route from the response
+      const route = data.routes[0].geometry;
+
+      // Calculate the distance
+      const distance = data.routes[0].distance / 1000; // convert meters to kilometers
+
+      // Calculate the midpoint for displaying the distance
+      const midPointIndex = Math.floor(route.coordinates.length / 2);
+      const midPoint = route.coordinates[midPointIndex];
+
+      if (mapInstance.getSource("route")) {
+        mapInstance.getSource("route").setData({
+          type: "Feature",
+          geometry: route,
+        });
+      } else {
+        mapInstance.addLayer({
+          id: "route",
+          type: "line",
+          source: {
+            type: "geojson",
+            data: {
+              type: "Feature",
+              geometry: route,
+            },
           },
-        },
-        paint: {
-          "line-color": "#3887be",
-          "line-width": 5,
-        },
-      });
-    }
-  };
+          paint: {
+            "line-color": "#3887be",
+            "line-width": 5,
+          },
+        });
+      }
 
-  const clearRoute = () => {
-    setDistance(null);
-    if (map.getLayer("route")) {
-      map.removeLayer("route");
-      map.removeSource("route");
+      // Remove the existing marker if it exists
+      if (distanceMarker) {
+        distanceMarker.remove();
+      }
+
+      // Create a custom marker element
+      const el = document.createElement("div");
+      el.className = "custom-marker";
+      el.style.backgroundImage = `url(${distanceMap})`;
+      el.style.width = "30px";
+      el.style.height = "30px";
+      el.style.backgroundSize = "100%";
+
+      // Create a popup with the distance
+      const popup = new mapboxgl.Popup({ offset: 25 }).setText(
+        `Distance: ${distance.toFixed(2)} km`
+      );
+
+      // Create a new marker with the custom element and set the popup
+      distanceMarker = new mapboxgl.Marker(el)
+        .setLngLat(midPoint)
+        .setPopup(popup)
+        .addTo(mapInstance);
+    } catch (error) {
+      console.error("Error fetching the route:", error);
     }
   };
 
   return (
-    <div className="w-full font-poppins pt-[5%] bg-blue-50 min-h-screen">
+    <div className="w-full font-poppins pt-[10%] bg-blue-50 min-h-screen">
       <main className="max-w-7xl mx-auto py-8 px-4">
         <div className="text-center mb-8">
           <h2 className="text-2xl font-bold mb-2">Welcome to PahingaU!</h2>
@@ -202,33 +240,8 @@ const FindDorms = () => {
                 ))}
               </select>
             )}
-            <button
-              className="mx-2 text-[#1A1A1A] hover:bg-gray-100 p-3 rounded-full"
-              onClick={handleSetWaypointFromInput}
-            >
-              <img src={mapLogo} className="w-6 h-6" alt="Map Logo" />
-            </button>
-            <Button
-              variant="solidm"
-              onClick={fetchRoute}
-              className="rounded-r-full"
-            >
-              Search
-            </Button>
           </div>
         </div>
-
-        {/* Use the FilterHome component */}
-        <FilterHome
-          selectedPrice={selectedPrice}
-          setSelectedPrice={setSelectedPrice}
-          showPriceDropdown={showPriceDropdown}
-          setShowPriceDropdown={setShowPriceDropdown}
-          selectedPlace={selectedPlace}
-          setSelectedPlace={setSelectedPlace}
-          showPlaceDropdown={showPlaceDropdown}
-          setShowPlaceDropdown={setShowPlaceDropdown}
-        />
 
         <div className="mb-16 flex flex-col lg:flex-row gap-8">
           <div className="lg:w-1/2">
@@ -244,17 +257,6 @@ const FindDorms = () => {
             <ListingBesideMapCards />
           </div>
         </div>
-
-        {distance !== null && (
-          <div className="mt-4 p-4 bg-white text-black rounded-lg shadow-lg">
-            <p>
-              <strong>Distance:</strong> {distance.toFixed(2)} km
-            </p>
-            <Button variant="solidm" onClick={clearRoute} className="mt-2">
-              Clear Route
-            </Button>
-          </div>
-        )}
       </main>
     </div>
   );
