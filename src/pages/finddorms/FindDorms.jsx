@@ -10,6 +10,7 @@ import mapLogo from "../../assets/mapLogo.png";
 import logoImage from "../../assets/LogoImage.png";
 import housingMap from "../../assets/Housing-Map.png";
 import universityMap from "../../assets/University-Map.png";
+import distanceMap from "../../assets/Distance-Map.png";
 import FilterHome from "../../components/filterhome/FilterHome";
 
 const FindDorms = () => {
@@ -114,7 +115,7 @@ const FindDorms = () => {
   useEffect(() => {
     if (map && fromInput && universityCoordinates[fromInput]) {
       const newCenter = universityCoordinates[fromInput];
-      setInitialCenter(newCenter);
+      setInitialCenter(initialCenter);
       map.setMaxBounds(null);
       map.setZoom(12);
       marker.setLngLat(newCenter);
@@ -123,13 +124,45 @@ const FindDorms = () => {
     }
   }, [fromInput, map]);
 
-  const fetchRoute = async (mapInstance, fromCoordinates, toCoordinates) => {
-    const route = {
-      type: "LineString",
-      coordinates: [fromCoordinates, toCoordinates],
-    };
+  const haversineDistance = (coords1, coords2) => {
+    const toRad = (value) => (value * Math.PI) / 180;
 
+    const R = 6371; // Radius of the Earth in kilometers
+    const lat1 = toRad(coords1[1]);
+    const lon1 = toRad(coords1[0]);
+    const lat2 = toRad(coords2[1]);
+    const lon2 = toRad(coords2[0]);
+
+    const dLat = lat2 - lat1;
+    const dLon = lon2 - lon1;
+
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return R * c; // Distance in kilometers
+  };
+
+  let distanceMarker;
+
+  const fetchRoute = async (mapInstance, fromCoordinates, toCoordinates) => {
     try {
+      const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${fromCoordinates[0]},${fromCoordinates[1]};${toCoordinates[0]},${toCoordinates[1]}?geometries=geojson&access_token=${mapboxgl.accessToken}`;
+
+      const response = await fetch(url);
+      const data = await response.json();
+
+      // Extract the route from the response
+      const route = data.routes[0].geometry;
+
+      // Calculate the distance
+      const distance = data.routes[0].distance / 1000; // convert meters to kilometers
+
+      // Calculate the midpoint for displaying the distance
+      const midPointIndex = Math.floor(route.coordinates.length / 2);
+      const midPoint = route.coordinates[midPointIndex];
+
       if (mapInstance.getSource("route")) {
         mapInstance.getSource("route").setData({
           type: "Feature",
@@ -152,13 +185,37 @@ const FindDorms = () => {
           },
         });
       }
+
+      // Remove the existing marker if it exists
+      if (distanceMarker) {
+        distanceMarker.remove();
+      }
+
+      // Create a custom marker element
+      const el = document.createElement("div");
+      el.className = "custom-marker";
+      el.style.backgroundImage = `url(${distanceMap})`;
+      el.style.width = "30px";
+      el.style.height = "30px";
+      el.style.backgroundSize = "100%";
+
+      // Create a popup with the distance
+      const popup = new mapboxgl.Popup({ offset: 25 }).setText(
+        `Distance: ${distance.toFixed(2)} km`
+      );
+
+      // Create a new marker with the custom element and set the popup
+      distanceMarker = new mapboxgl.Marker(el)
+        .setLngLat(midPoint)
+        .setPopup(popup)
+        .addTo(mapInstance);
     } catch (error) {
-      console.error("Error adding route layer:", error);
+      console.error("Error fetching the route:", error);
     }
   };
 
   return (
-    <div className="w-full font-poppins pt-[5%] bg-blue-50 min-h-screen">
+    <div className="w-full font-poppins pt-[10%] bg-blue-50 min-h-screen">
       <main className="max-w-7xl mx-auto py-8 px-4">
         <div className="text-center mb-8">
           <h2 className="text-2xl font-bold mb-2">Welcome to PahingaU!</h2>
