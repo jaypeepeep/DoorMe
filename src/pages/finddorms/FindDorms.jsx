@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
@@ -29,11 +28,11 @@ const FindDorms = () => {
     }
 
     // Fetch universities data
-    axios
-      .get("http://localhost:5000/api/universities")
-      .then((response) => {
+    fetch("http://localhost:5000/api/universities")
+      .then((response) => response.json())
+      .then((data) => {
         const fetchedUniversities = {};
-        response.data.forEach((university) => {
+        data.forEach((university) => {
           fetchedUniversities[university.name] = [
             university.longitude,
             university.latitude,

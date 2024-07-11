@@ -43,6 +43,15 @@ db.serialize(() => {
     )
   `);
 
+  db.run(`
+    CREATE TABLE IF NOT EXISTS universities (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT UNIQUE,
+      latitude REAL,
+      longitude REAL
+    )
+  `);
+
   // Insert initial user (without hashing)
   const initialUser = `
     INSERT INTO users (fullName, email, university, socialStatus, phoneNumber, username, password)
@@ -52,9 +61,12 @@ db.serialize(() => {
   db.run(initialUser, function (err) {
     if (err && err.message.includes('SQLITE_CONSTRAINT')) {
       // The initial user already exists, no need to insert again
+      console.log('Initial user already exists');
       return;
     } else if (err) {
       console.error('Error inserting initial user:', err.message);
+    } else {
+      console.log('Initial user inserted');
     }
   });
 
@@ -69,21 +81,16 @@ db.serialize(() => {
   db.run(initialHousingData, function (err) {
     if (err && err.message.includes('SQLITE_CONSTRAINT')) {
       // The initial housing data already exists, no need to insert again
+      console.log('Initial housing data already exists');
       return;
     } else if (err) {
       console.error('Error inserting initial housing data:', err.message);
+    } else {
+      console.log('Initial housing data inserted');
     }
   });
 
   // Create universities table and insert predefined coordinates
-  db.run(`
-    CREATE TABLE IF NOT EXISTS universities (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT UNIQUE,
-      latitude REAL,
-      longitude REAL
-    )
-  `);
 
   const universityCoordinates = {
     "Adamson University": [120.986, 14.6042],
@@ -107,9 +114,12 @@ db.serialize(() => {
     db.run(insertUniversityQuery, [name, coords[1], coords[0]], function (err) {
       if (err && err.message.includes('SQLITE_CONSTRAINT')) {
         // The university already exists, no need to insert again
+        console.log(`University ${name} already exists`);
         return;
       } else if (err) {
         console.error(`Error inserting university ${name}:`, err.message);
+      } else {
+        console.log(`University ${name} inserted`);
       }
     });
   }
@@ -159,6 +169,32 @@ app.post('/api/login', (req, res) => {
     } else {
       res.status(400).json({ error: 'Invalid username or password' });
     }
+  });
+});
+
+// Endpoint to fetch all universities
+app.get('/api/universities', (req, res) => {
+  const query = `
+    SELECT name, latitude, longitude FROM universities
+  `;
+  db.all(query, (err, rows) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json(rows); // Send universities data as JSON response
+  });
+});
+
+// Endpoint to fetch all users
+app.get('/api/users', (req, res) => {
+  const query = `
+    SELECT id, fullName, email, university, socialStatus, phoneNumber, username FROM users
+  `;
+  db.all(query, (err, rows) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json(rows); // Send users data as JSON response
   });
 });
 
