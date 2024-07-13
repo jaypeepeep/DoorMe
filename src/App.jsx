@@ -35,7 +35,7 @@ const App = () => {
           <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
           <Route path="/CookiePolicy" element={<CookiePolicy />} />
           <Route path="/SafetyGuidelines" element={<SafetyGuidelines />} />
-          <Route path="/ViewDorm" element={<ViewDorm />} />
+          <Route path="/ViewDorm/:id" element={<ViewDorm />} />
           <Route path="/FindDorms" element={<FindDorms />} />
           <Route path="/Success" element={<Success />} />
         </Routes>
