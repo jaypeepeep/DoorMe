@@ -27,7 +27,7 @@ const Profile = () => {
 
   return (
     <div className="profile">
-      <div className="profile-container">
+      <div className="profile-container h-[360px] ml-32">
         <div className="sidebar">
           <ul className="menu">
             <li className="menu-item">
@@ -43,19 +43,19 @@ const Profile = () => {
               </NavLink>
             </li>
             <li className="menu-item">
-              <NavLink to="visits" className={({ isActive }) => (isActive ? "active" : "")}>
+              <NavLink to="VisitsSection" className={({ isActive }) => (isActive ? "active" : "")}>
                 <span className="material-icons">event</span>
                 <span>Visits</span>
               </NavLink>
             </li>
             <li className="menu-item">
-              <NavLink to="to-review" className={({ isActive }) => (isActive ? "active" : "")}>
+              <NavLink to="ToReviewSection" className={({ isActive }) => (isActive ? "active" : "")}>
                 <span className="material-icons">rate_review</span>
                 <span>To Review</span>
               </NavLink>
             </li>
             <li className="menu-item">
-              <NavLink to="security" className={({ isActive }) => (isActive ? "active" : "")}>
+              <NavLink to="SecuritySection" className={({ isActive }) => (isActive ? "active" : "")}>
                 <span className="material-icons">security</span>
                 <span>Security</span>
               </NavLink>
