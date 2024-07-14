@@ -37,10 +37,8 @@ const Header = () => {
   }, [clicked]);
 
   useEffect(() => {
-    const user = localStorage.getItem('user');
-    if (user) {
-      setIsLoggedIn(true);
-    }
+    const user = JSON.parse(localStorage.getItem('user'));
+    setIsLoggedIn(!!user);
   }, []);
 
   const handleClick = () => {
@@ -127,18 +125,16 @@ const Header = () => {
                 </NavLink>
               </li>
               {isLoggedIn ? (
-                <>
-                  <li className="text-base font-bold font-sans cursor-pointer">
-                    <NavLink
-                      to="/Profile"
-                      activeClassName="text-[#0077B5]"
-                      className="flex items-center hover:text-[#0077B5] transition duration-300 ease-in-out"
-                    >
-                      Profile
-                      <AccountCircleIcon className="ml-1" />
-                    </NavLink>
-                  </li>
-                </>
+                <li className="text-base font-bold font-sans cursor-pointer">
+                  <NavLink
+                    to="/Profile"
+                    activeClassName="text-[#0077B5]"
+                    className="flex items-center hover:text-[#0077B5] transition duration-300 ease-in-out"
+                  >
+                    Profile
+                    <AccountCircleIcon className="ml-1" />
+                  </NavLink>
+                </li>
               ) : (
                 <>
                   <li className="text-base font-bold font-sans cursor-pointer">
