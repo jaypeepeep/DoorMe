@@ -176,7 +176,7 @@ const FindDorms = () => {
 
   return (
     <div className="w-full font-poppins pt-[10%] bg-blue-50 min-h-screen">
-      <main className="max-w-7xl mx-auto py-8 px-4">
+      <main className="max-w-7xl mx-auto  px-4">
         <div className="text-center mb-8">
           <h2 className="text-2xl font-bold mb-2">Welcome to PahingaU!</h2>
           {user && <p className="text-xl">Logged in as: {user.fullName}</p>}
