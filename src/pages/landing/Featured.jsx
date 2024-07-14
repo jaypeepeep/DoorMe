@@ -26,7 +26,7 @@ const Featured = () => {
                         Featured Properties
                     </h1>
                     <p className="font-montserrat text-center text-xl leading-[32px]">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Find the perfect housing for you.
                     </p>
                 </div>
             </div>
