@@ -10,7 +10,7 @@ const How = () => {
   return (
     <>
       <div className="w-full px-4 sm:px-[10%] font-montserrat">
-        <div className="flex pt-10 sm:pt-[30%] pb-20 sm:pb-[20%] flex-col justify-center gap-5 text-center">
+        <div className="flex pt-10 sm:pt-[15%] pb-20 sm:pb-[30%] flex-col justify-center gap-5 text-center">
           <BlackButton>HOW IT WORKS</BlackButton>
           <h1 className="w-full sm:w-3/4 font-montserrat m-auto text-4xl sm:text-6xl font-regular leading-tight sm:leading-[78px] text-center">
             Knock on the Right Door in 3 Easy Steps!
