@@ -6,9 +6,9 @@ import icon3 from '../../assets/Icon3.png';
 
 const WorkWithUs = () => {
   const cardsData = [
-      {icon: icon1, title: 'Wide Range of Properties', description: 'We offer expert legal help for all related property items in Dubai.', },
-      {icon: icon2, title: 'Buy or Rent Homes', description: 'We sell your home at the best market price and very quickly as well.',},
-      {icon: icon3, title: 'Trusted by Thousands', description: 'We offer you free consultancy to get a loan for your new home.',},
+      {icon: icon1, title: 'Wide Range of Properties', description: 'We offer a wide range of properties to suit students need.', },
+      {icon: icon2, title: 'Listing Your Home', description: 'We list your home in the marketplace for renters to see.',},
+      {icon: icon3, title: 'Trusted by Thousands', description: 'We are trusted by thousands of students and alumni.',},
   ];
   return (
     <div className="w-full px-[10%] py-20 flex flex-col  gap-7 justify-center items-center ">
@@ -17,7 +17,7 @@ const WorkWithUs = () => {
                 Why You Should Work With Us
             </h1>
             <p className="font-montserrat text-center text-xl leading-[32px]">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                We showcase housing units to college students.
             </p>
         </div>
         <div className="flex sm:flex-row flex-col justify-center gap-8">
