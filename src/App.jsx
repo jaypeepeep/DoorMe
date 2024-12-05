@@ -1,13 +1,13 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Header from "./components/header/Header";
-import Footer from "./components/footer/Footer";
+import Header from "./components/Header/Header";
+import Footer from "./components/Footer/Footer";
 import Landing from "./pages/landing/Landing";
 import About from "./pages/about/About";
 import Login from "./pages/login/Login"; // Correct file import
 import Register from "./pages/register/Register"; // Correct file import
-import How from "./pages/howitworks/How"
-import Profile from './pages/profile/Profile';
-import Success from './pages/success/Success';
+import How from "./pages/howitworks/How";
+import Profile from "./pages/profile/Profile";
+import Success from "./pages/success/Success";
 import TransitionWrapper from "./components/transition/TransitionWrapper";
 import ScrollToTop from "./components/scrollbehavior/ScrollToTop";
 import TermsOfService from "./pages/termsofservice/Termsofservice";
