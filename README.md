@@ -1,9 +1,6 @@
 # DoorMe: A Web-Based Dormitory Search Platform for College Students
 
-WEB DEVELOPMENT
-BSCS 3-3
-
-### MEMBERS
+### Collaborators
 - Abelligos, Adrian Rafael
 - Alpapara Nichole
 - Lagatuz, John Patrick
