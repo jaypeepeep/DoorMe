@@ -84,7 +84,7 @@ function Login({ setIsLoggedIn }) {
         </form>
         <p>
           Don’t have an account?{" "}
-          <a href="/register" className="create-account-link">
+          <a href="/Register" className="create-account-link">
             Create an account
           </a>
         </p>
